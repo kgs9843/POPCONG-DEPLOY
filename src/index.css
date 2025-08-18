@@ -1,0 +1,164 @@
+/* reset.css */
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/*Web View Screen*/
+:root {
+  --font-display: "Pretendard", "SUIT", sans-serif;
+  --container-width-sm: 500px; /* iPhone 13 Pro CSS 해상도 기준 */
+  --container-height: 844px;
+
+  /* 전역 컨테이너 기본 스타일 */
+  max-width: var(--container-width-sm);
+  margin: auto auto; /* 가운데 정렬 */
+  min-width: 300px;
+  width: 100%; /* 화면이 더 작으면 100%로 */
+  height: 100vh;
+}
+
+/* HTML & BODY */
+html,
+body {
+  min-height: 100vh; /* 브라우저 뷰포트 높이 기준 */
+}
+
+body {
+  font-family: var(--font-display);
+  position: relative;
+}
+
+/*전역 변수*/
+:root {
+  --font-display: "Pretendard", "SUIT", sans-serif;
+  --default1: #2764eb;
+  --default2: #5b86e5;
+  --default3: #bdcff5;
+  --default4: #bdcff54d;
+  --gray1: #e5e5ec;
+  --gray2: #767676;
+  --red: #e55b5b;
+  --white: #ffffff;
+  --black: #1a1a1a;
+}

@@ -1,0 +1,391 @@
+import styled from "styled-components";
+import { useState } from "react";
+import useSignupStore from "../stores/useSignupStore";
+
+// 아이콘
+import backIcon from "../assets/icons/backIcon.svg";
+import profileIcon from "../assets/icons/profileIcon.svg";
+import editProfileIcon from "../assets/icons/editProfileIcon.svg";
+import completeIcon from "../assets/icons/completeIcon.svg";
+// import questionIcon from "../assets/icons/questionIcon.svg";
+
+const Container = styled.div`
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const PageHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  padding: 16px 0;
+`;
+
+const BackButton = styled.img`
+  position: absolute;
+  left: 16px;
+  cursor: pointer;
+`;
+
+const Title = styled.h2`
+  color: var(--black);
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 140%;
+  letter-spacing: -0.4px;
+`;
+
+const ProfileWrapper = styled.div`
+  position: relative;
+  margin: 70px auto 20px;
+`;
+
+const Profile = styled.img`
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--default2);
+  cursor: pointer;
+`;
+
+const EditProfileButton = styled.img`
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  bottom: 0;
+  right: 0;
+  cursor: pointer;
+  border-radius: 50%;
+`;
+
+const HiddenInput = styled.input`
+  display: none;
+`;
+
+const Form = styled.form`
+  display: flex;
+  width: 90%;
+  max-width: 400px;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const InputGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-self: stretch;
+`;
+
+const Label = styled.label`
+  color: var(--black);
+  font-family: Pretendard;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 120%;
+  letter-spacing: -0.35px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const RequiredMark = styled.span`
+  color: var(--red);
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%;
+  letter-spacing: -0.35px;
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 16px 20px;
+  padding-right: 40px;
+  box-sizing: border-box;
+  color: var(--black);
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 120%;
+  border-radius: 8px;
+  border: 1.5px solid
+    ${(props) => (props.$isComplete ? "var(--default1)" : "var(--default3)")};
+  outline: none;
+`;
+
+const CompleteIcon = styled.img`
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+  display: ${(props) => (props.$isComplete ? "block" : "none")};
+`;
+
+const FileUploadWrapper = styled.div`
+  position: relative;
+`;
+
+const FileUploadBox = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1.5px solid var(--default3);
+  cursor: pointer;
+  gap: 10px;
+  color: var(--black);
+  font-size: 12px;
+`;
+
+const FileName = styled.span`
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--default1);
+  font-family: Pretendard;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 120%;
+`;
+
+// const QuestionIcon = styled.img`
+//   position: absolute;
+//   top: 50%;
+//   right: 12px;
+//   width: 20px;
+//   height: 20px;
+//   transform: translateY(-50%);
+//   cursor: pointer;
+// `;
+
+// const Tooltip = styled.div`
+//   position: absolute;
+//   top: 50%;
+//   right: 36px;
+//   transform: translateY(-50%);
+//   background-color: var(--black);
+//   color: var(--white);
+//   font-size: 12px;
+//   padding: 4px 8px;
+//   border-radius: 4px;
+//   white-space: nowrap;
+//   display: ${(props) => (props.$show ? "block" : "none")};
+// `;
+
+const NextButton = styled.button`
+  all: unset;
+  display: flex;
+  height: 42px;
+  padding: 6px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  align-self: stretch;
+  border-radius: 4px;
+  border: 1px solid var(--default1);
+  background: var(--default1);
+  cursor: pointer;
+
+  color: var(--white);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 140%;
+  letter-spacing: -0.35px;
+
+  &:disabled {
+    color: var(--white) !important;
+  }
+
+  position: fixed;
+  bottom: 20px;
+  left: 17px;
+  right: 17px;
+`;
+
+const GuestInfoForm = () => {
+  const { setNextStep } = useSignupStore();
+  const { setBackStep } = useSignupStore();
+  const [profile, setProfile] = useState(profileIcon);
+  const [name, setName] = useState("");
+  const [introduce, setIntroduce] = useState("");
+  const [idFile, setIdFile] = useState(null);
+  const [licenseFile, setLicenseFile] = useState(null);
+
+  // 툴팁 상태
+  // const [showIdTooltip, setShowIdTooltip] = useState(false);
+  // const [showLicenseTooltip, setShowLicenseTooltip] = useState(false);
+
+  const isValid = name.trim() !== "" && idFile !== null;
+
+  const handleProfileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setProfile(reader.result);
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e, setFile) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setFile(file);
+  };
+
+  const handleNext = (e) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    // SignupSuccess 페이지로 이동
+    setNextStep(3);
+  };
+
+  return (
+    <Container>
+      <PageHeader>
+        <BackButton src={backIcon} alt="뒤로가기" onClick={setBackStep} />
+        <Title>개인정보 입력</Title>
+      </PageHeader>
+
+      <ProfileWrapper>
+        <Profile
+          src={profile}
+          alt="프로필 사진"
+          onClick={() => document.getElementById("profileInput").click()}
+        />
+        <EditProfileButton
+          src={editProfileIcon}
+          alt="프로필 수정"
+          onClick={() => document.getElementById("profileInput").click()}
+        />
+        <HiddenInput
+          id="profileInput"
+          type="file"
+          accept="image/*"
+          onChange={handleProfileChange}
+        />
+      </ProfileWrapper>
+
+      <Form onSubmit={handleNext}>
+        {/* 이름 */}
+        <InputGroup>
+          <Label htmlFor="name">
+            이름<RequiredMark>*</RequiredMark>
+          </Label>
+          <InputWrapper>
+            <Input
+              id="name"
+              type="text"
+              placeholder="이름을 입력해 주세요"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              $isComplete={name.trim() !== ""}
+              autoComplete="off"
+              name="guest_name"
+            />
+            <CompleteIcon
+              src={completeIcon}
+              alt="완료"
+              $isComplete={name.trim() !== ""}
+            />
+          </InputWrapper>
+        </InputGroup>
+
+        {/* 소개 */}
+        <InputGroup>
+          <Label htmlFor="introduce">소개</Label>
+          <Input
+            id="introduce"
+            type="text"
+            placeholder="소개 문구를 입력해 주세요"
+            value={introduce}
+            onChange={(e) => setIntroduce(e.target.value)}
+          />
+        </InputGroup>
+
+        {/* 신분증 사본 */}
+        <InputGroup>
+          <Label>
+            신분증 사본<RequiredMark>*</RequiredMark>
+          </Label>
+          <FileUploadWrapper>
+            <FileUploadBox
+              onClick={() => document.getElementById("idFileInput").click()}
+            >
+              <FileName>{idFile ? idFile.name : "파일 선택하기"}</FileName>
+            </FileUploadBox>
+            {/* <QuestionIcon
+              src={questionIcon}
+              alt="도움말"
+              onMouseEnter={() => setShowIdTooltip(true)}
+              onMouseLeave={() => setShowIdTooltip(false)}
+            />
+            <Tooltip $show={showIdTooltip}>신분증 사진을 업로드해 주세요.</Tooltip> */}
+          </FileUploadWrapper>
+          <HiddenInput
+            id="idFileInput"
+            type="file"
+            accept=".png,.jpg,.jpeg,.pdf"
+            onChange={(e) => handleFileChange(e, setIdFile)}
+          />
+        </InputGroup>
+
+        {/* 업종 인허가증 */}
+        <InputGroup>
+          <Label>업종 인허가증</Label>
+          <FileUploadWrapper>
+            <FileUploadBox
+              onClick={() =>
+                document.getElementById("licenseFileInput").click()
+              }
+            >
+              <FileName>
+                {licenseFile ? licenseFile.name : "파일 선택하기"}
+              </FileName>
+            </FileUploadBox>
+            {/* <QuestionIcon
+              src={questionIcon}
+              alt="도움말"
+              onMouseEnter={() => setShowLicenseTooltip(true)}
+              onMouseLeave={() => setShowLicenseTooltip(false)}
+            />
+            <Tooltip $show={showLicenseTooltip}>
+              업종 인허가증을 업로드해 주세요.
+            </Tooltip> */}
+          </FileUploadWrapper>
+          <HiddenInput
+            id="licenseFileInput"
+            type="file"
+            accept=".png,.jpg,.jpeg,.pdf"
+            onChange={(e) => handleFileChange(e, setLicenseFile)}
+          />
+        </InputGroup>
+
+        <NextButton type="submit" disabled={!isValid}>
+          다음
+        </NextButton>
+      </Form>
+    </Container>
+  );
+};
+
+export default GuestInfoForm;
