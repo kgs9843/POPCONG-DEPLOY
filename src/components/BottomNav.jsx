@@ -8,7 +8,7 @@ import ChatIcon from "../assets/icons/chatIcon.svg";
 import ChatActiveIcon from "../assets/icons/activeIcons/chatIcon.svg";
 import MyIcon from "../assets/icons/myIcon.svg";
 import MyActiveIcon from "../assets/icons/activeIcons/myIcon.svg";
-import { chatAlert } from "../stores/Alert";
+import { chatAlert } from "../stores/alert";
 
 const navItems = [
   { label: "홈", icon: HomeIcon, activeIcon: HomeActiveIcon, path: "/main" },
