@@ -9,7 +9,7 @@ import DownArrowBlueIcon from "../assets/icons/downArrowBlueIcon.svg";
 import { useGeoLocation } from "../hooks/useGeoLocation";
 import { getDongFromCoords } from "../utils/getDongFromCoords";
 import { getCoordsFromDong } from "../utils/getCoordsFromDong";
-import { notificationAlert } from "../stores/Alert";
+import { notificationAlert } from "../stores/alert";
 import topNavLocationStore from "../stores/topNavLocationStore";
 
 //gps 옵션
