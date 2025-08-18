@@ -11,23 +11,12 @@ import { getDongFromCoords } from "../utils/getDongFromCoords";
 import { getCoordsFromDong } from "../utils/getCoordsFromDong";
 import { notificationAlert } from "../stores/alert";
 import topNavLocationStore from "../stores/topNavLocationStore";
-
+import regions from "../data/regions";
 //gps 옵션
 const geolocationOptions = {
   enableHighAccuracy: true,
   timeout: 1000 * 10,
   maximumAge: 1000 * 3600 * 24,
-};
-
-const regions = {
-  서울: {
-    강남구: ["역삼1동", "삼성동"],
-    강동구: ["천호1동", "성내1동"],
-  },
-  부산: {
-    해운대구: ["중동", "우동"],
-    수영구: ["남천동", "광안동"],
-  },
 };
 
 const TopNav = () => {
@@ -38,8 +27,8 @@ const TopNav = () => {
   const { location, error } = useGeoLocation(geolocationOptions);
   const [isActive, setIsActive] = useState(false);
   const dropdownRef = useRef(null);
-  const [selectedRegion, setSelectedRegion] = useState("서울");
-  const [selectedDong, setSelectedDong] = useState("대현동");
+  const [selectedRegion, setSelectedRegion] = useState("울산");
+  const [selectedDong, setSelectedDong] = useState("반구1동");
   const [showDropdown, setShowDropdown] = useState(false);
   const [expandedDistricts, setExpandedDistricts] = useState({});
   const toggleDropdown = () => setShowDropdown(!showDropdown);
@@ -296,7 +285,7 @@ const RegionName = styled.div`
   font-size: 14px;
   cursor: pointer;
   background-color: white;
-  color: ${(props) => (props.active ? "var(--default4)" : "var(--gray2)")};
+  color: ${(props) => (props.active ? "var(--default1)" : "var(--gray2)")};
 `;
 
 const DistrictRow = styled.div`
@@ -307,7 +296,7 @@ const DistrictRow = styled.div`
   flex-direction: row;
   padding: 10px 0px;
   font-size: 14px;
-  color: var(--default4);
+  color: var(--default1);
   cursor: pointer;
 `;
 
@@ -315,7 +304,7 @@ const DongName = styled.div`
   padding: 6px 0px;
   font-size: 13px;
   text-align: center;
-  background-color: var(--default5);
+  background-color: var(--default4);
   color: var(--gray2);
   cursor: pointer;
 `;
