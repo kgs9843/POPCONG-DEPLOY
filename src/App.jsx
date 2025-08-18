@@ -2,7 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import Main from "./pages/Main";
 import OnboardingPage from "./pages/OnBoarding";
 import Home from "./pages/Home";
-import Signup from "./pages/SignUp";
+import Signup from "./pages/Signup";
 import Map from "./pages/Map";
 import BottomNav from "./components/BottomNav";
 import TopNav from "./components/TopNav";
