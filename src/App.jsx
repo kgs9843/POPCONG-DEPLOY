@@ -1,7 +1,9 @@
 import { Routes, Route, useLocation } from "react-router-dom";
+
+import Splash from "./pages/Splash";
 import OnBoarding from "./pages/OnBoarding";
 import Home from "./pages/Home";
-import Signup from "./pages/Signup";
+import Signup from "./pages/SignUp";
 import Map from "./pages/Map";
 import BottomNav from "./components/BottomNav";
 import TopNav from "./components/TopNav";
@@ -19,6 +21,8 @@ function App() {
 
   // 바텀nav바를 숨길 경로들
   const hideBottomNavPaths = [
+    "/splash",
+    "/",
     "/signup",
     "/login",
     "/chat/room/buy",
@@ -30,6 +34,8 @@ function App() {
 
   // 탑nav바를 숨길 경로들
   const hideTopNavPaths = [
+    "/splash",
+    "/",
     "/login",
     "/signup",
     "/chat/room/final",
@@ -47,6 +53,7 @@ function App() {
   return (
     <>
       <Routes>
+        <Route path="/splash" element={<Splash />} />
         <Route path="/" element={<OnBoarding />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
