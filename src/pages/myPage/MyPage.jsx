@@ -101,9 +101,9 @@ const MyPage = () => {
   const [likeOpen, setLikeOpen] = useState(false);
   const [hostOpen, setHostOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [reserveCount, setReserveCount] = useState(1);
-  const [progressCount, setProgressCount] = useState(1);
-  const [doneCount, setDoneCount] = useState(1);
+  const [reserveCount, setReserveCount] = useState(2);
+  const [progressCount, setProgressCount] = useState(0);
+  const [doneCount, setDoneCount] = useState(0);
   return (
     <MainContainer>
       <Content>

@@ -25,10 +25,23 @@ const PostingCreatePage = () => {
     area: "", // 전용면적 (㎡)
   });
 
+  // editingData → form 형태로 변환
+  const mapEditingDataToForm = (data) => ({
+    price: data.price || data.rentalFee || "",
+    subText: data.subText || "", // editingData에 없으니 빈값
+    location: data.location || data.address || "",
+    subLocation: data.subLocation || "", // editingData에 없음
+    maxDays: data.maxDays || "", // editingData에 없음
+    images: data.coverImageUrl ? [data.coverImageUrl] : [], // 배열로 통일
+    buildingUsage: data.buildingUsage || "", // editingData에 없음
+    floor: data.floor?.toString() || "", // 숫자 → 문자열 변환
+    area: data.area || "", // editingData에 없음
+  });
+
   // 수정 모드일 때 초기화
   useEffect(() => {
     if (editingData) {
-      setForm(editingData);
+      setForm(mapEditingDataToForm(editingData));
     }
   }, [editingData]);
 
@@ -70,10 +83,10 @@ const PostingCreatePage = () => {
 
   const handleSubmit = () => {
     if (isEdit) {
-      navigate("/main");
+      navigate("/home");
     } else {
       console.log("새 매물 등록:", form);
-      navigate("/main");
+      navigate("/home");
     }
   };
 

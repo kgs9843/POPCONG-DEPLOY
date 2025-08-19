@@ -14,41 +14,25 @@ const api = axios.create({
   withCredentials: true,
 });
 
-// GET 요청
-export const get = (url, data) => api.get(url, data);
-
-// POST 요청
-export const post = (url, data) => api.post(url, data);
-
-// PUT 요청
-export const put = (url, data) => api.put(url, data);
-
-// DELETE 요청
-export const del = (url) => api.delete(url);
-
-// PATCH 요청
-export const patch = (url, data) => api.patch(url, data);
-
 export default api;
 
-// // ✅ 모든 요청에 자동으로 accessTok en 추가
-// api.interceptors.request.use(
-//   async (config) => {
-//     try {
-//       const tokenData = localStorage.getItem("userTokens");
-//       if (tokenData) {
-//         const { accessToken } = JSON.parse(tokenData);
-//         if (accessToken) {
-//           config.headers["Authorization"] = `Bearer ${accessToken}`;
-//         }
-//       }
-//     } catch (error) {
-//       console.error("토큰 불러오기 실패:", error);
-//     }
-//     return config;
-//   },
-//   (error) => Promise.reject(error)
-// );
+// ✅ 모든 요청에 자동으로 accessTok en 추가
+api.interceptors.request.use(
+  async (config) => {
+    try {
+      const tokenData = localStorage.getItem("access_token");
+      console.log(tokenData);
+      if (tokenData) {
+        config.headers["Authorization"] = `Bearer ${tokenData}`;
+      }
+      console.log(config);
+    } catch (error) {
+      console.error("토큰 불러오기 실패:", error);
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // // 🔥 응답 인터셉터: 리프레시 토큰으로 재발급 처리
 // api.interceptors.response.use(
@@ -57,7 +41,7 @@ export default api;
 //     if (error.response?.status === 401) {
 //       console.log("토큰 만료됨, 리프레시 토큰 사용!");
 
-//       const tokenData = localStorage.getItem("userTokens");
+//       const tokenData = localStorage.getItem("refresh_token");
 //       if (tokenData) {
 //         const { refreshToken } = JSON.parse(tokenData);
 //         try {
@@ -85,3 +69,18 @@ export default api;
 //     return Promise.reject(error);
 //   }
 // );
+
+// GET 요청
+export const get = (url, data) => api.get(url, data);
+
+// POST 요청
+export const post = (url, data) => api.post(url, data);
+
+// PUT 요청
+export const put = (url, data) => api.put(url, data);
+
+// DELETE 요청
+export const del = (url, data) => api.delete(url, data);
+
+// PATCH 요청
+export const patch = (url, data) => api.patch(url, data);

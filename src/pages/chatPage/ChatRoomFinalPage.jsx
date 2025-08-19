@@ -26,7 +26,7 @@ const ChatRoomFinalPage = () => {
       <HomeBox>
         <HomeButton
           onClick={() => {
-            navigate("/main");
+            navigate("/home");
           }}
         >
           홈으로 가기

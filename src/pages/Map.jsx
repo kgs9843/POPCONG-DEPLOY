@@ -276,7 +276,17 @@ const Map = () => {
                   setInitialHeight(140);
                 }}
               >
-                <Thumbnail />
+                <Thumbnail>
+                  <img
+                    src={item.coverImageUrl || "/default-image.png"}
+                    alt={item.spaceName || "공간 이미지"}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
+                </Thumbnail>
                 <Info>
                   <Price>{item.price.toLocaleString()}원</Price>
                   <div
@@ -309,6 +319,7 @@ const Map = () => {
               </ListItem>
             ))}
           </ListContainer>
+          <div style={{ height: 80 }} />
         </DragModal>
       </DragModalContainer>
 

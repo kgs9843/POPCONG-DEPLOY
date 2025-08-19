@@ -1,6 +1,6 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import LeftArrowIcon from "../../assets/icons/leftArrowIconBlack.svg";
 import GrayIcon from "../../assets/icons/grayMarker.svg";
 import SendIcon from "../../assets/icons/sendIcon.svg";
@@ -18,6 +18,9 @@ const dummyPlace = {
 const ChatRoomPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { item } = location.state || {}; // state 없으면 {} 처리
+  const chatEndRef = useRef(null);
   const [messages, setMessages] = useState([
     {
       id: 1,
@@ -113,11 +116,28 @@ const ChatRoomPage = () => {
   ]);
   const [input, setInput] = useState("");
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const now = new Date();
+  const hours = now.getHours();
+  const minutes = now.getMinutes().toString().padStart(2, "0");
+
+  const ampm = hours >= 12 ? "오후" : "오전";
+  const displayHour = hours % 12 || 12;
+  const time = `${ampm} ${displayHour}:${minutes}`;
+
+  // 스크롤을 맨 아래로 이동시키는 함수
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   const sendMessage = () => {
     if (!input.trim()) return;
     setMessages([
       ...messages,
-      { id: Date.now(), text: input, sender: "me", time: "오후 5:40" },
+      { id: Date.now(), text: input, sender: "me", time },
     ]);
     setInput("");
   };
@@ -145,7 +165,7 @@ const ChatRoomPage = () => {
           <Info>
             <Top>
               <img
-                src={dummyPlace.image}
+                src={item ? item.coverImageUrl : null}
                 alt="item"
                 style={{ width: 45, height: 45, backgroundColor: "#CCC" }}
               />
@@ -165,9 +185,11 @@ const ChatRoomPage = () => {
                     alt="marker"
                     style={{ width: "auto", height: "auto" }}
                   />
-                  {dummyPlace.location}
+                  {item ? item.location : "서울 특별시 종로 1가"}
                 </SubText>
-                <Price>{dummyPlace.price.toLocaleString()}원</Price>
+                <Price>
+                  {item ? item.price.toLocaleString() : "500,000"}원
+                </Price>
               </div>
             </Top>
           </Info>
@@ -201,6 +223,8 @@ const ChatRoomPage = () => {
               )}
             </MessageBubble>
           ))}
+          {/* 스크롤 끝 ref */}
+          <div ref={chatEndRef} />
         </MessageList>
 
         {/* 입력창 */}

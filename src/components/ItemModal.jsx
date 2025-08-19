@@ -17,9 +17,12 @@ const ItemModal = ({ isOpen, onClose, item }) => {
   const [liked, setLiked] = useState(false); // 상태값 저장
   if (!isOpen || !item) return null;
 
-  const images = item.images && item.images.length > 0 ? item.images : [null]; // 기본 이미지 처리
-  const total = 5;
-
+  const images =
+    item.coverImageUrl && item.coverImageUrl.length > 0
+      ? item.coverImageUrl
+      : [null]; // 기본 이미지 처리
+  const total = 1;
+  console.log(item);
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
   };
@@ -30,7 +33,7 @@ const ItemModal = ({ isOpen, onClose, item }) => {
 
   const handleLikeToggle = async () => {
     try {
-      const spaceId = 123; // 임의 ID
+      const spaceId = item.spaceId; // 임의 ID
 
       if (liked) {
         // 이미 좋아요 상태라면 → 취소 요청

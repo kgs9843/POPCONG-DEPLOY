@@ -1,32 +1,12 @@
 import styled from "styled-components";
 import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import LeftArrow from "../../assets/icons/leftArrowIcon.svg"; // 좌측 화살표 (하얀색)
 import RightArrow from "../../assets/icons/rightArrowIcon.svg"; // 우측 화살표 (하얀색)
 import HeartIcon from "../../assets/icons/heartIcon.svg";
 import HeartActiveIcon from "../../assets/icons/activeIcons/heartActiveIcon.svg";
 import GrayMarkerIcon from "../../assets/icons/grayMarker.svg";
 import StarIcon from "../../assets/icons/star.svg";
-const dummyPosting = {
-  id: 1,
-  price: 100000,
-  subText: "한줄소개",
-  location: "대구 북구 대학로 71",
-  subLocation: "2층",
-  maxDays: 7,
-  images: [
-    "https://via.placeholder.com/500x300?text=Image1",
-    "https://via.placeholder.com/500x300?text=Image2",
-    "https://via.placeholder.com/500x300?text=Image3",
-  ],
-  buildingUsage: "근린생활시설", // 건축물 용도
-  floor: "2", // 해당 층
-  area: "45", // 전용면적 (㎡)
-  // 기존에 있던 데이터
-  distance: 700,
-  reviews: 16,
-  rating: 4.0,
-};
 
 const dummyHost = {
   id: 1,
@@ -37,12 +17,17 @@ const dummyHost = {
 };
 const PostingDetailPage = () => {
   const navigate = useNavigate();
-  const { price, rating, reviews, subText, location, images } = dummyPosting;
+  const location = useLocation();
+  const { item } = location.state || {}; // state 없으면 {} 처리
   const { id } = useParams();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [liked, setLiked] = useState(false); // 상태값 저장
 
-  const total = 5;
+  const images =
+    item.coverImageUrl && item.coverImageUrl.length > 0
+      ? item.coverImageUrl
+      : [null]; // 기본 이미지 처리
+  const total = 1;
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
@@ -97,23 +82,23 @@ const PostingDetailPage = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Price>{price.toLocaleString()}원</Price>
+              <Price>{item.price.toLocaleString()}원</Price>
               <EditBtn
                 onClick={() => {
-                  navigate("/post/create", { state: dummyPosting });
+                  navigate("/post/create", { state: item });
                 }}
               >
                 수정하기
               </EditBtn>
             </div>
-            <SubText>{subText}</SubText>
+            <SubText>{item.subText ? item.subText : null}</SubText>
             <Location>
-              <img src={GrayMarkerIcon} alt="marker" /> {location}
+              <img src={GrayMarkerIcon} alt="marker" /> {item.location}
             </Location>
             <Rating>
-              <img src={StarIcon} alt="star" /> {rating}{" "}
+              <img src={StarIcon} alt="star" /> {item.rating}{" "}
               <span style={{ fontSize: 12, color: "var(--gray2)" }}>
-                ({reviews})
+                ({item.reviews})
               </span>
             </Rating>
           </InfoSection>
@@ -129,16 +114,16 @@ const PostingDetailPage = () => {
                 <Value>제1종근린생활시설</Value>
               </DetailRow>
               <DetailRow>
-                <Label>해당층/건물층</Label>
-                <Value>1층 / 6층</Value>
+                <Label>해당층</Label>
+                <Value>1층</Value>
               </DetailRow>
               <DetailRow>
                 <Label>전용면적</Label>
-                <Value>140.82㎡</Value>
+                <Value>140.82 ㎡</Value>
               </DetailRow>
               <DetailRow>
                 <Label>임대가능 최대일수</Label>
-                <Value>140.82㎡</Value>
+                <Value>7 일</Value>
               </DetailRow>
             </div>
           </DetailSection>
@@ -174,7 +159,7 @@ const PostingDetailPage = () => {
       <NextBox>
         <NextButton
           onClick={() => {
-            navigate(`/chat/room/${id}`);
+            navigate(`/chat/room/${id}`, { state: { item } });
           }}
         >
           문의하기
