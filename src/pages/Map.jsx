@@ -7,6 +7,7 @@ import Star from "../assets/icons/star.svg";
 import DragModal from "../components/DragModal";
 import GrayMarker from "../assets/icons/grayMarker.svg";
 import ItemModal from "../components/ItemModal";
+import Test from "../components/Test";
 //gps 옵션
 const geolocationOptions = {
   enableHighAccuracy: true,

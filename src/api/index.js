@@ -2,12 +2,12 @@
 import axios from "axios";
 
 // Vite에서는 import.meta.env 로 환경 변수 사용
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+const VITE_BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
 //console.log(VITE_API_URL);
 
 // axios 인스턴스 생성
 const api = axios.create({
-  baseURL: VITE_API_URL,
+  baseURL: VITE_BACKEND_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },

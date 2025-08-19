@@ -8,6 +8,8 @@ import LeftArrow from "../assets/icons/leftArrowIcon.svg"; // 좌측 화살표 (
 import RightArrow from "../assets/icons/rightArrowIcon.svg"; // 우측 화살표 (하얀색)
 import HeartIcon from "../assets/icons/heartIcon.svg";
 import HeartActiveIcon from "../assets/icons/activeIcons/heartActiveIcon.svg";
+import { likeSpace } from "../api/wish-controller/wishPost";
+import { unlikeSpace } from "../api/wish-controller/wishDelete";
 const ItemModal = ({ isOpen, onClose, item }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [liked, setLiked] = useState(false); // 상태값 저장
@@ -22,6 +24,32 @@ const ItemModal = ({ isOpen, onClose, item }) => {
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+  };
+
+  const handleLikeToggle = async () => {
+    try {
+      const spaceId = 123; // 임의 ID
+
+      if (liked) {
+        // 이미 좋아요 상태라면 → 취소 요청
+        const res = await unlikeSpace(spaceId);
+        if (res?.data?.isLiked !== undefined) {
+          setLiked(res.data.isLiked);
+        } else {
+          setLiked(false);
+        }
+      } else {
+        // 좋아요 상태가 아니라면 → 생성 요청
+        const res = await likeSpace(spaceId);
+        if (res?.data?.isLiked !== undefined) {
+          setLiked(res.data.isLiked);
+        } else {
+          setLiked(true);
+        }
+      }
+    } catch (error) {
+      console.error("좋아요 토글 에러:", error);
+    }
   };
 
   return (
@@ -43,7 +71,7 @@ const ItemModal = ({ isOpen, onClose, item }) => {
           </CloseButton>
         </div>
 
-        <HeartContainer onClick={() => setLiked((prev) => !prev)}>
+        <HeartContainer onClick={handleLikeToggle}>
           <img src={liked ? HeartActiveIcon : HeartIcon} alt="heart" />
         </HeartContainer>
 

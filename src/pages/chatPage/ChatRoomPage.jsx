@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import LeftArrowIcon from "../../assets/icons/leftArrowIconBlack.svg";
 import GrayIcon from "../../assets/icons/grayMarker.svg";
+import SendIcon from "../../assets/icons/sendIcon.svg";
 
 const dummyPlace = {
   id: 1,
@@ -209,7 +210,9 @@ const ChatRoomPage = () => {
             onChange={(e) => setInput(e.target.value)}
             placeholder="메시지를 입력하세요"
           />
-          <SendButton onClick={sendMessage}>전송</SendButton>
+          <SendButton onClick={sendMessage}>
+            <img src={SendIcon} alt="send" />
+          </SendButton>
         </InputContainer>
       </div>
     </Container>
@@ -348,11 +351,14 @@ const ChatInput = styled.input`
 `;
 
 const SendButton = styled.button`
+  justify-content: center;
+  align-items: center;
+  display: flex;
   margin-left: 10px;
   background: var(--default1);
   border: none;
   color: white;
   border-radius: 20px;
-  padding: 0 15px;
+  padding: 0 10px;
   cursor: pointer;
 `;
