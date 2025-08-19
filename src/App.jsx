@@ -1,5 +1,7 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import OnboardingPage from "./pages/OnBoarding";
+
+import Main from "./pages/Main";
+import OnBoarding from "./pages/OnBoarding";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Map from "./pages/Map";
@@ -13,8 +15,10 @@ import PostingDetailPage from "./pages/post/PostingDetailPage";
 import PostingCreatePage from "./pages/post/PostingCreatePage";
 import MyPage from "./pages/myPage/MyPage";
 import EditProfilePage from "./pages/myPage/EditProfilePage";
+
 function App() {
   const location = useLocation();
+
   // 바텀nav바를 숨길 경로들
   const hideBottomNavPaths = [
     "/signup",
@@ -25,6 +29,7 @@ function App() {
     "/post/detail",
     "/mypage/edit/profile",
   ];
+
   // 탑nav바를 숨길 경로들
   const hideTopNavPaths = [
     "/login",
@@ -33,19 +38,13 @@ function App() {
     "/post/create",
   ];
 
-  // BottomNav
-  const shouldHideBottomNav =
-    location.pathname === "/" ||
-    hideBottomNavPaths.some((path) => location.pathname.startsWith(path));
+  const shouldHideBottomNav = hideBottomNavPaths.includes(location.pathname);
+  const shouldHideTopNav = hideTopNavPaths.includes(location.pathname);
 
-  // TopNav
-  const shouldHideTopNav =
-    location.pathname === "/" ||
-    hideTopNavPaths.some((path) => location.pathname.startsWith(path));
   return (
     <>
       <Routes>
-        <Route path="/" element={<OnboardingPage />} />
+        <Route path="/" element={<OnBoarding />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/home" element={<Home />} />
         <Route path="/map" element={<Map />} />

@@ -4,6 +4,7 @@ import HostInfoForm from "../components/HostInfoForm";
 import GuestInfoForm from "../components/GuestInfoForm";
 import SignupSuccess from "../components/SignupSuccess";
 import useSignupStore from "../stores/useSignupStore";
+import useAuthRedirect from "../hooks/useAuthRedirect";
 
 const SignupContainer = styled.div`
   position: fixed;
@@ -20,7 +21,10 @@ const SignupContainer = styled.div`
   align-items: center;
 `;
 
-const SignupPage = () => {
+const Signup = () => {
+  // 로그인 redirect 시 토큰 저장
+  useAuthRedirect();
+
   // Zustant 스토어에서 step, userType 가져오기
   const { step, userType } = useSignupStore();
 
@@ -35,4 +39,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default Signup;

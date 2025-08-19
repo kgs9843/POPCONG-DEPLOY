@@ -187,32 +187,35 @@ const NextButton = styled.button`
   line-height: 140%;
   letter-spacing: -0.35px;
 
-  &:disabled {
-    color: var(--white) !important;
-  }
-
   position: fixed;
   bottom: 20px;
   left: 17px;
   right: 17px;
+
+  &:disabled {
+    color: var(--white) !important;
+  }
 `;
 
 const HostInfoForm = () => {
-  const { setNextStep, setBackStep } = useSignupStore();
+  const { setNextStep, setBackStep, name, setName } = useSignupStore();
+
+  // 상태 정의
   const [profile, setProfile] = useState(profileIcon);
-  const [name, setName] = useState("");
   const [introduce, setIntroduce] = useState("");
   const [idFile, setIdFile] = useState(null);
   const [buildingFile, setBuildingFile] = useState(null);
   const [leaseFile, setLeaseFile] = useState(null);
   const [bankFile, setBankFile] = useState(null);
 
+  // 모든 필수 입력 체크
   const isValid =
     name.trim() !== "" &&
     idFile !== null &&
     buildingFile !== null &&
     leaseFile !== null;
 
+  // 프로필 이미지 선택
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -221,6 +224,7 @@ const HostInfoForm = () => {
     reader.readAsDataURL(file);
   };
 
+  // 일반 파일 선택
   const handleFileChange = (e, setFile) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -273,8 +277,6 @@ const HostInfoForm = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               $isComplete={name.trim() !== ""}
-              autoComplete="off"
-              name="guest_name"
             />
             <CompleteIcon
               src={completeIcon}
@@ -296,89 +298,48 @@ const HostInfoForm = () => {
           />
         </InputGroup>
 
-        {/* 신분증 사본 */}
-        <InputGroup>
-          <Label>
-            신분증 사본<RequiredMark>*</RequiredMark>
-          </Label>
-          <FileUploadWrapper>
-            <FileUploadBox
-              onClick={() => document.getElementById("idFileInput").click()}
-            >
-              <FileName>{idFile ? idFile.name : "파일 선택하기"}</FileName>
-            </FileUploadBox>
-          </FileUploadWrapper>
-          <HiddenInput
-            id="idFileInput"
-            type="file"
-            accept=".png,.jpg,.jpeg,.pdf"
-            onChange={(e) => handleFileChange(e, setIdFile)}
-          />
-        </InputGroup>
-
-        {/* 건축물대장 */}
-        <InputGroup>
-          <Label>
-            건축물대장<RequiredMark>*</RequiredMark>
-          </Label>
-          <FileUploadWrapper>
-            <FileUploadBox
-              onClick={() =>
-                document.getElementById("buildingFileInput").click()
-              }
-            >
-              <FileName>
-                {buildingFile ? buildingFile.name : "파일 선택하기"}
-              </FileName>
-            </FileUploadBox>
-          </FileUploadWrapper>
-          <HiddenInput
-            id="buildingFileInput"
-            type="file"
-            accept=".png,.jpg,.jpeg,.pdf"
-            onChange={(e) => handleFileChange(e, setBuildingFile)}
-          />
-        </InputGroup>
-
-        {/* 임대차 계약서 */}
-        <InputGroup>
-          <Label>
-            임대차 계약서<RequiredMark>*</RequiredMark>
-          </Label>
-          <FileUploadWrapper>
-            <FileUploadBox
-              onClick={() => document.getElementById("leaseFileInput").click()}
-            >
-              <FileName>
-                {leaseFile ? leaseFile.name : "파일 선택하기"}
-              </FileName>
-            </FileUploadBox>
-          </FileUploadWrapper>
-          <HiddenInput
-            id="leaseFileInput"
-            type="file"
-            accept=".png,.jpg,.jpeg,.pdf"
-            onChange={(e) => handleFileChange(e, setLeaseFile)}
-          />
-        </InputGroup>
-
-        {/* 통장 사본 */}
-        <InputGroup>
-          <Label>통장 사본</Label>
-          <FileUploadWrapper>
-            <FileUploadBox
-              onClick={() => document.getElementById("bankFileInput").click()}
-            >
-              <FileName>{bankFile ? bankFile.name : "파일 선택하기"}</FileName>
-            </FileUploadBox>
-          </FileUploadWrapper>
-          <HiddenInput
-            id="bankFileInput"
-            type="file"
-            accept=".png,.jpg,.jpeg,.pdf"
-            onChange={(e) => handleFileChange(e, setBankFile)}
-          />
-        </InputGroup>
+        {["신분증 사본", "건축물대장", "임대차 계약서", "통장 사본"].map(
+          (label, index) => {
+            const fileState = [idFile, buildingFile, leaseFile, bankFile][
+              index
+            ];
+            const setFileState = [
+              setIdFile,
+              setBuildingFile,
+              setLeaseFile,
+              setBankFile,
+            ][index];
+            const inputId = [
+              "idFileInput",
+              "buildingFileInput",
+              "leaseFileInput",
+              "bankFileInput",
+            ][index];
+            return (
+              <InputGroup key={index}>
+                <Label>
+                  {label}
+                  {index < 3 && <RequiredMark>*</RequiredMark>}
+                </Label>
+                <FileUploadWrapper>
+                  <FileUploadBox
+                    onClick={() => document.getElementById(inputId).click()}
+                  >
+                    <FileName>
+                      {fileState ? fileState.name : "파일 선택하기"}
+                    </FileName>
+                  </FileUploadBox>
+                </FileUploadWrapper>
+                <HiddenInput
+                  id={inputId}
+                  type="file"
+                  accept=".png,.jpg,.jpeg,.pdf"
+                  onChange={(e) => handleFileChange(e, setFileState)}
+                />
+              </InputGroup>
+            );
+          }
+        )}
 
         <NextButton type="submit" disabled={!isValid}>
           다음

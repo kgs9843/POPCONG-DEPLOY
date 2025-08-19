@@ -7,7 +7,6 @@ import backIcon from "../assets/icons/backIcon.svg";
 import profileIcon from "../assets/icons/profileIcon.svg";
 import editProfileIcon from "../assets/icons/editProfileIcon.svg";
 import completeIcon from "../assets/icons/completeIcon.svg";
-// import questionIcon from "../assets/icons/questionIcon.svg";
 
 const Container = styled.div`
   width: 100%;
@@ -101,10 +100,7 @@ const RequiredMark = styled.span`
   color: var(--red);
   font-family: Pretendard;
   font-size: 14px;
-  font-style: normal;
   font-weight: 700;
-  line-height: 120%;
-  letter-spacing: -0.35px;
 `;
 
 const InputWrapper = styled.div`
@@ -167,30 +163,6 @@ const FileName = styled.span`
   line-height: 120%;
 `;
 
-// const QuestionIcon = styled.img`
-//   position: absolute;
-//   top: 50%;
-//   right: 12px;
-//   width: 20px;
-//   height: 20px;
-//   transform: translateY(-50%);
-//   cursor: pointer;
-// `;
-
-// const Tooltip = styled.div`
-//   position: absolute;
-//   top: 50%;
-//   right: 36px;
-//   transform: translateY(-50%);
-//   background-color: var(--black);
-//   color: var(--white);
-//   font-size: 12px;
-//   padding: 4px 8px;
-//   border-radius: 4px;
-//   white-space: nowrap;
-//   display: ${(props) => (props.$show ? "block" : "none")};
-// `;
-
 const NextButton = styled.button`
   all: unset;
   display: flex;
@@ -212,31 +184,29 @@ const NextButton = styled.button`
   line-height: 140%;
   letter-spacing: -0.35px;
 
-  &:disabled {
-    color: var(--white) !important;
-  }
-
   position: fixed;
   bottom: 20px;
   left: 17px;
   right: 17px;
+
+  &:disabled {
+    color: var(--white) !important;
+  }
 `;
 
 const GuestInfoForm = () => {
-  const { setNextStep } = useSignupStore();
-  const { setBackStep } = useSignupStore();
+  const { setNextStep, setBackStep, name, setName } = useSignupStore();
+
+  // 상태 정의
   const [profile, setProfile] = useState(profileIcon);
-  const [name, setName] = useState("");
   const [introduce, setIntroduce] = useState("");
   const [idFile, setIdFile] = useState(null);
   const [licenseFile, setLicenseFile] = useState(null);
 
-  // 툴팁 상태
-  // const [showIdTooltip, setShowIdTooltip] = useState(false);
-  // const [showLicenseTooltip, setShowLicenseTooltip] = useState(false);
-
+  // 필수 입력 체크
   const isValid = name.trim() !== "" && idFile !== null;
 
+  // 프로필 이미지 변경
   const handleProfileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -245,6 +215,7 @@ const GuestInfoForm = () => {
     reader.readAsDataURL(file);
   };
 
+  // 일반 파일 변경
   const handleFileChange = (e, setFile) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -254,18 +225,18 @@ const GuestInfoForm = () => {
   const handleNext = (e) => {
     e.preventDefault();
     if (!isValid) return;
-
-    // SignupSuccess 페이지로 이동
-    setNextStep(3);
+    setNextStep(3); // SignupSuccess 화면으로 이동
   };
 
   return (
     <Container>
+      {/* 헤더 */}
       <PageHeader>
         <BackButton src={backIcon} alt="뒤로가기" onClick={setBackStep} />
         <Title>개인정보 입력</Title>
       </PageHeader>
 
+      {/* 프로필 이미지 */}
       <ProfileWrapper>
         <Profile
           src={profile}
@@ -285,6 +256,7 @@ const GuestInfoForm = () => {
         />
       </ProfileWrapper>
 
+      {/* 입력 폼 */}
       <Form onSubmit={handleNext}>
         {/* 이름 */}
         <InputGroup>
@@ -299,8 +271,6 @@ const GuestInfoForm = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               $isComplete={name.trim() !== ""}
-              autoComplete="off"
-              name="guest_name"
             />
             <CompleteIcon
               src={completeIcon}
@@ -333,13 +303,6 @@ const GuestInfoForm = () => {
             >
               <FileName>{idFile ? idFile.name : "파일 선택하기"}</FileName>
             </FileUploadBox>
-            {/* <QuestionIcon
-              src={questionIcon}
-              alt="도움말"
-              onMouseEnter={() => setShowIdTooltip(true)}
-              onMouseLeave={() => setShowIdTooltip(false)}
-            />
-            <Tooltip $show={showIdTooltip}>신분증 사진을 업로드해 주세요.</Tooltip> */}
           </FileUploadWrapper>
           <HiddenInput
             id="idFileInput"
@@ -362,15 +325,6 @@ const GuestInfoForm = () => {
                 {licenseFile ? licenseFile.name : "파일 선택하기"}
               </FileName>
             </FileUploadBox>
-            {/* <QuestionIcon
-              src={questionIcon}
-              alt="도움말"
-              onMouseEnter={() => setShowLicenseTooltip(true)}
-              onMouseLeave={() => setShowLicenseTooltip(false)}
-            />
-            <Tooltip $show={showLicenseTooltip}>
-              업종 인허가증을 업로드해 주세요.
-            </Tooltip> */}
           </FileUploadWrapper>
           <HiddenInput
             id="licenseFileInput"
@@ -380,6 +334,7 @@ const GuestInfoForm = () => {
           />
         </InputGroup>
 
+        {/* 다음 버튼 */}
         <NextButton type="submit" disabled={!isValid}>
           다음
         </NextButton>
