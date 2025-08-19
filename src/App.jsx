@@ -16,7 +16,7 @@ function App() {
   const location = useLocation();
   // 바텀nav바를 숨길 경로들
   const hideBottomNavPaths = [
-    "signup",
+    "/signup",
     "/login",
     "/chat/room/buy",
     "/chat/room/final",
@@ -26,7 +26,7 @@ function App() {
   // 탑nav바를 숨길 경로들
   const hideTopNavPaths = [
     "/login",
-    "signup",
+    "/signup",
     "/chat/room/final",
     "/post/create",
   ];
@@ -51,7 +51,6 @@ function App() {
         <Route path="/chat/room/:id" element={<ChatRoomPage />} />
         <Route path="/chat/room/buy/:id" element={<ChatRoomBuyPage />} />
         <Route path="/chat/room/final" element={<ChatRoomFinalPage />} />
-        <Route path="/main" element={<Main />} />
         <Route path="/post/detail/:id" element={<PostingDetailPage />} />
         <Route path="/post/create" element={<PostingCreatePage />} />
       </Routes>
