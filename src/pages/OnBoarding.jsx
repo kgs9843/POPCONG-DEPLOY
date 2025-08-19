@@ -24,7 +24,11 @@ const OnboardingContainer = styled.div`
 `;
 
 const SwiperWrapper = styled.div`
-  flex: 4;
+  position: absolute;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -39,7 +43,10 @@ const SlideImage = styled.img`
 `;
 
 const BottomWrapper = styled.div`
-  flex: 1;
+  position: absolute;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;

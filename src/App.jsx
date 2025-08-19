@@ -22,7 +22,6 @@ function App() {
   // 바텀nav바를 숨길 경로들
   const hideBottomNavPaths = [
     "/splash",
-    "/",
     "/signup",
     "/login",
     "/chat/room/buy",
@@ -35,7 +34,6 @@ function App() {
   // 탑nav바를 숨길 경로들
   const hideTopNavPaths = [
     "/splash",
-    "/",
     "/login",
     "/signup",
     "/chat/room/final",
