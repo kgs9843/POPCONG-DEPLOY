@@ -1,6 +1,4 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-
-import Main from "./pages/Main";
 import OnBoarding from "./pages/OnBoarding";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
@@ -37,10 +35,15 @@ function App() {
     "/chat/room/final",
     "/post/create",
   ];
+  // BottomNav
+  const shouldHideBottomNav =
+    location.pathname === "/" ||
+    hideBottomNavPaths.some((path) => location.pathname.startsWith(path));
 
-  const shouldHideBottomNav = hideBottomNavPaths.includes(location.pathname);
-  const shouldHideTopNav = hideTopNavPaths.includes(location.pathname);
-
+  // TopNav
+  const shouldHideTopNav =
+    location.pathname === "/" ||
+    hideTopNavPaths.some((path) => location.pathname.startsWith(path));
   return (
     <>
       <Routes>
