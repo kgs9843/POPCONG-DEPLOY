@@ -11,6 +11,8 @@ import ChatRoomBuyPage from "./pages/chatPage/ChatRoomBuyPage";
 import ChatRoomFinalPage from "./pages/chatPage/ChatRoomFinalPage";
 import PostingDetailPage from "./pages/post/PostingDetailPage";
 import PostingCreatePage from "./pages/post/PostingCreatePage";
+import MyPage from "./pages/myPage/MyPage";
+import EditProfilePage from "./pages/myPage/EditProfilePage";
 function App() {
   const location = useLocation();
   // 바텀nav바를 숨길 경로들
@@ -21,6 +23,7 @@ function App() {
     "/chat/room/final",
     "/post/create",
     "/post/detail",
+    "/mypage/edit/profile",
   ];
   // 탑nav바를 숨길 경로들
   const hideTopNavPaths = [
@@ -52,6 +55,8 @@ function App() {
         <Route path="/chat/room/final" element={<ChatRoomFinalPage />} />
         <Route path="/post/detail/:id" element={<PostingDetailPage />} />
         <Route path="/post/create" element={<PostingCreatePage />} />
+        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage/edit/profile" element={<EditProfilePage />} />
       </Routes>
       {!shouldHideBottomNav && <BottomNav />}
       {!shouldHideTopNav && <TopNav />}
