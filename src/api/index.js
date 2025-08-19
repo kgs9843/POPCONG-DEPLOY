@@ -14,6 +14,23 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// GET 요청
+export const get = (url, data) => api.get(url, data);
+
+// POST 요청
+export const post = (url, data) => api.post(url, data);
+
+// PUT 요청
+export const put = (url, data) => api.put(url, data);
+
+// DELETE 요청
+export const del = (url) => api.delete(url);
+
+// PATCH 요청
+export const patch = (url, data) => api.patch(url, data);
+
+export default api;
+
 // // ✅ 모든 요청에 자동으로 accessTok en 추가
 // api.interceptors.request.use(
 //   async (config) => {
@@ -68,20 +85,3 @@ const api = axios.create({
 //     return Promise.reject(error);
 //   }
 // );
-
-// GET 요청
-export const get = (url) => api.get(url);
-
-// POST 요청
-export const post = (url, data) => api.post(url, data);
-
-// PUT 요청
-export const put = (url, data) => api.put(url, data);
-
-// DELETE 요청
-export const del = (url) => api.delete(url);
-
-// PATCH 요청
-export const patch = (url, data) => api.patch(url, data);
-
-export default api;

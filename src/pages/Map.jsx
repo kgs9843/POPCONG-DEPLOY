@@ -8,96 +8,14 @@ import DragModal from "../components/DragModal";
 import GrayMarker from "../assets/icons/grayMarker.svg";
 import ItemModal from "../components/ItemModal";
 import Test from "../components/Test";
+import { getPlaces } from "../api/space-controller/spaceGet";
+
 //gps 옵션
 const geolocationOptions = {
   enableHighAccuracy: true,
   timeout: 1000 * 10,
   maximumAge: 1000 * 3600 * 24,
 };
-
-// 더미 데이터 (10개)
-const dummyData = [
-  {
-    id: 1,
-    price: 100000,
-    distance: 700,
-    reviews: 16,
-    rating: 4.0,
-    location: "대구 북구 대학로 71 2층",
-  },
-  {
-    id: 2,
-    price: 50000,
-    distance: 15500,
-    reviews: 25,
-    rating: 4.5,
-    location: "대구 중구 중앙대로 23",
-  },
-  {
-    id: 3,
-    price: 200000,
-    distance: 1500,
-    reviews: 10,
-    rating: 3.8,
-    location: "대구 수성구 들안로 102",
-  },
-  {
-    id: 4,
-    price: 75000,
-    distance: 300,
-    reviews: 40,
-    rating: 4.7,
-    location: "대구 달서구 월배로 11",
-  },
-  {
-    id: 5,
-    price: 120000,
-    distance: 2200,
-    reviews: 18,
-    rating: 4.2,
-    location: "대구 북구 칠곡중앙대로 55",
-  },
-  {
-    id: 6,
-    price: 95000,
-    distance: 5000,
-    reviews: 33,
-    rating: 4.3,
-    location: "대구 동구 동대구로 77",
-  },
-  {
-    id: 7,
-    price: 300000,
-    distance: 800,
-    reviews: 5,
-    rating: 3.5,
-    location: "대구 서구 서대구로 19",
-  },
-  {
-    id: 8,
-    price: 60000,
-    distance: 1200,
-    reviews: 27,
-    rating: 4.6,
-    location: "대구 남구 현충로 8",
-  },
-  {
-    id: 9,
-    price: 180000,
-    distance: 9500,
-    reviews: 22,
-    rating: 4.1,
-    location: "대구 달성군 화원읍 성화로 21",
-  },
-  {
-    id: 10,
-    price: 80000,
-    distance: 400,
-    reviews: 12,
-    rating: 3.9,
-    location: "대구 중구 동성로 12",
-  },
-];
 
 const Map = () => {
   const { location } = useGeoLocation(geolocationOptions);
@@ -109,11 +27,39 @@ const Map = () => {
   const [selectedFloor, setSelectedFloor] = useState(null);
   const [selectedRating, setSelectedRating] = useState(null);
   const [initialHeight, setInitialHeight] = useState(140);
+  const [loading, setLoading] = useState(true);
+
+  const [originMarkers, setOriginMarkers] = useState([]);
+  const [markers, setMarkers] = useState([]);
 
   useEffect(() => {
     if (!location) return;
     setCurrentLocation(location);
+    fetchPlaces();
   }, [location]);
+
+  const fetchPlaces = async () => {
+    try {
+      const data = await getPlaces(location?.latitude, location?.longitude); // 필요 시 파라미터 전달
+      const rawMarkers = data.data.markers;
+      // 변환 로직
+      const transformed = rawMarkers.map((item) => ({
+        ...item,
+        id: item.spaceId,
+        price: item.rentalFee,
+        distance: item.distance, // 필요하면 (item.distance / 1000).toFixed(1) + "km" 로 변환
+        reviews: item.reviewCount,
+        rating: item.rating,
+        location: item.address,
+      }));
+      setMarkers(transformed);
+      setOriginMarkers(transformed);
+    } catch (error) {
+      console.error("데이터 불러오기 실패:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const toggleDropdown = (type) => {
     setActiveDropdown((prev) => (prev === type ? null : type));
@@ -122,14 +68,46 @@ const Map = () => {
   const getSortedList = () => {
     switch (activeSort) {
       case "popular": // 인기순
-        return [...dummyData].sort((a, b) => b.rating - a.rating);
+        return [...markers].sort((a, b) => b.rating - a.rating);
       case "distance": // 가까운 거리순
-        return [...dummyData].sort((a, b) => a.distance - b.distance);
+        return [...markers].sort((a, b) => a.distance - b.distance);
       case "review": // 후기 많은 순
-        return [...dummyData].sort((a, b) => b.reviews - a.reviews);
+        return [...markers].sort((a, b) => b.reviews - a.reviews);
       default:
-        return dummyData;
+        return markers;
     }
+  };
+
+  const applyFilters = (priceRange, floorRange, ratingRange) => {
+    let filtered = [...originMarkers];
+
+    // 가격 필터
+    if (priceRange) {
+      const [minStr, maxStr] = priceRange.split("~");
+      const min = parseInt(minStr.replace(",", "")) || 0;
+      const max = maxStr ? parseInt(maxStr.replace(",", "")) : Infinity;
+      filtered = filtered.filter(
+        (marker) => marker.price >= min && marker.price <= max
+      );
+    }
+
+    // 층수 필터
+    if (floorRange) {
+      const floorNum = parseInt(floorRange.replace("층", "").replace("~", ""));
+      if (floorRange.startsWith("~")) {
+        filtered = filtered.filter((marker) => marker.floor <= floorNum);
+      } else {
+        filtered = filtered.filter((marker) => marker.floor === floorNum);
+      }
+    }
+
+    // 평점 필터
+    if (ratingRange) {
+      const minRating = parseFloat(ratingRange.replace("~", ""));
+      filtered = filtered.filter((marker) => marker.rating >= minRating);
+    }
+    setActiveDropdown(null);
+    setMarkers(filtered);
   };
 
   const sortedList = getSortedList();
@@ -161,7 +139,7 @@ const Map = () => {
                     key={price}
                     onClick={() => {
                       setSelectedPrice(price);
-                      setActiveDropdown(null);
+                      applyFilters(price, selectedFloor, selectedRating);
                     }}
                   >
                     {price}
@@ -191,7 +169,7 @@ const Map = () => {
                     key={floor}
                     onClick={() => {
                       setSelectedFloor(floor);
-                      setActiveDropdown(null);
+                      applyFilters(selectedPrice, floor, selectedRating);
                     }}
                   >
                     {floor}
@@ -220,7 +198,7 @@ const Map = () => {
                     key={rating}
                     onClick={() => {
                       setSelectedRating(rating);
-                      setActiveDropdown(null);
+                      applyFilters(selectedPrice, selectedFloor, rating);
                     }}
                   >
                     <img src={Star} alt="Star" />
@@ -238,6 +216,7 @@ const Map = () => {
         <KakaoMap
           lat={currentLocation ? currentLocation.latitude : undefined}
           lng={currentLocation ? currentLocation.longitude : undefined}
+          markers={markers}
         />
       </div>
       <DragModalContainer>

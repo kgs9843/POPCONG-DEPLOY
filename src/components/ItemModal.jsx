@@ -1,6 +1,7 @@
 // components/ItemModal.js
 import React, { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 import CloseIcon from "../assets/icons/closeIcon.svg";
 import StarIcon from "../assets/icons/star.svg";
 import GrayMarker from "../assets/icons/grayMarker.svg";
@@ -11,6 +12,7 @@ import HeartActiveIcon from "../assets/icons/activeIcons/heartActiveIcon.svg";
 import { likeSpace } from "../api/wish-controller/wishPost";
 import { unlikeSpace } from "../api/wish-controller/wishDelete";
 const ItemModal = ({ isOpen, onClose, item }) => {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [liked, setLiked] = useState(false); // 상태값 저장
   if (!isOpen || !item) return null;
@@ -119,8 +121,20 @@ const ItemModal = ({ isOpen, onClose, item }) => {
 
         {/* 버튼들 */}
         <ButtonContainer>
-          <Button>상세보기</Button>
-          <InquiryButton>문의하기</InquiryButton>
+          <Button
+            onClick={() => {
+              navigate(`/post/detail/${item.spaceId}`, { state: { item } });
+            }}
+          >
+            상세보기
+          </Button>
+          <InquiryButton
+            onClick={() => {
+              navigate(`/chat/room/${item.spaceId}`, { state: { item } });
+            }}
+          >
+            문의하기
+          </InquiryButton>
         </ButtonContainer>
       </Modal>
       <div style={{ height: 80, width: "100%" }} />

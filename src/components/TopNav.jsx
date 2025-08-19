@@ -40,9 +40,17 @@ const TopNav = () => {
     setShowDropdown(false);
   };
 
-  const hideNavPaths = ["/chat"];
-  const shouldHideNav = locationURL?.pathname.includes(hideNavPaths);
-  console.log(locationURL?.pathname);
+  const hideNavPaths = ["/chat", "/mypage"];
+  const shouldHideNav = hideNavPaths.some((path) =>
+    locationURL?.pathname.startsWith(path)
+  );
+
+  let navTitle = "";
+  if (locationURL?.pathname.startsWith("/chat")) {
+    navTitle = "채팅";
+  } else if (locationURL?.pathname.startsWith("/mypage")) {
+    navTitle = "마이페이지";
+  }
 
   const toggleDistrict = (region, district) => {
     setExpandedDistricts((prev) => ({
@@ -89,7 +97,7 @@ const TopNav = () => {
         >
           {shouldHideNav ? (
             <span style={{ fontWeight: 500, fontSize: "18px", color: "white" }}>
-              채팅
+              {navTitle}
             </span>
           ) : (
             <>
