@@ -1,5 +1,4 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import Main from "./pages/Main";
 import OnboardingPage from "./pages/OnBoarding";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
