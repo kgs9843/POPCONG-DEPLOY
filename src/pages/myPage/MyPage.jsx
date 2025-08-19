@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import UpArrowIcon from "../../assets/icons/upArrowIcon.svg"; // svg 불러오기
 import Star from "../../assets/icons/star.svg";
 import GrayMarker from "../../assets/icons/grayMarker.svg";
+import useSignupStore from "../../stores/useSignupStore";
 const dummyHost = {
   id: 1,
   name: "홍길동",
@@ -104,6 +105,9 @@ const MyPage = () => {
   const [reserveCount, setReserveCount] = useState(2);
   const [progressCount, setProgressCount] = useState(0);
   const [doneCount, setDoneCount] = useState(0);
+  const { userType } = useSignupStore();
+  const isHost = userType === "host";
+
   return (
     <MainContainer>
       <Content>
@@ -131,7 +135,7 @@ const MyPage = () => {
                 </HostProfile>
                 <HostName>{dummyHost.name} 님</HostName>
                 {/* host 라벨 */}
-                {dummyHost.host && <HostLabel>Host</HostLabel>}
+                {isHost && <HostLabel>Host</HostLabel>}
               </div>
               <ModifyBtn
                 onClick={() =>
@@ -142,7 +146,7 @@ const MyPage = () => {
               </ModifyBtn>
             </div>
             <HostInfo>{dummyHost.introduction}</HostInfo>
-            {dummyHost.host && (
+            {isHost && (
               <FullWidthBtn onClick={() => navigate("/post/create")}>
                 상가 등록하기
               </FullWidthBtn>
@@ -221,7 +225,7 @@ const MyPage = () => {
         </Section>
 
         {/* 내 건물 관리 아코디언*/}
-        {dummyHost.host && (
+        {isHost && (
           <Section>
             <AccordionHeader onClick={() => setHostOpen((prev) => !prev)}>
               내 건물 관리
