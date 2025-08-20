@@ -267,8 +267,6 @@ const Home = () => {
   useAuthRedirect();
   const { name, userType } = useSignupStore();
 
-  const [rerender, setRerender] = useState(false);
-
   // 나의 팝업 / 나의 매물
   const myItems = [
     {
