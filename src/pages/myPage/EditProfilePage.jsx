@@ -41,21 +41,22 @@ const EditProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Sdfsdf");
-    let resultProfile = profileImage;
-    if (resultProfile != state?.profileImage) {
-      resultProfile = dataURLtoFile(profileImage, "profile.png");
-    }
+    // let resultProfile = profileImage;
+    // if (resultProfile != state?.profileImage) {
+    //   resultProfile = dataURLtoFile(profileImage, "profile.png");
+    // }
 
-    console.log(resultProfile);
-    try {
-      const response = await patchProfile(name, introduction, resultProfile);
-      console.log("프로필 업데이트 성공:", response);
+    // console.log(resultProfile);
+    // try {
+    //   const response = await patchProfile(name, introduction, resultProfile);
+    //   console.log("프로필 업데이트 성공:", response);
 
-      navigate(-1); // 저장 후 이전 페이지로 이동
-    } catch (error) {
-      console.error("프로필 업데이트 실패:", error);
-      alert("프로필 업데이트에 실패했습니다.");
-    }
+    //   navigate(-1); // 저장 후 이전 페이지로 이동
+    // } catch (error) {
+    //   console.error("프로필 업데이트 실패:", error);
+    //   alert("프로필 업데이트에 실패했습니다.");
+    // }
+    navigate(-1);
   };
   return (
     <Container>
