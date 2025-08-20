@@ -297,7 +297,7 @@ const Title = styled.div`
 const SubText = styled.div`
   display: flex;
   gap: 2px;
-  font-size: 13px;
+  font-size: 11px;
   color: var(--gray2);
 `;
 
