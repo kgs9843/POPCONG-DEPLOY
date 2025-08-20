@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { useState } from "react";
 import useSignupStore from "../stores/useSignupStore";
+import useAuthStore from "../stores/useAuthStore";
+import axios from "axios";
 
 // 아이콘
 import backIcon from "../assets/icons/backIcon.svg";
@@ -196,6 +198,7 @@ const NextButton = styled.button`
 
 const GuestInfoForm = () => {
   const { setNextStep, setBackStep, name, setName } = useSignupStore();
+  const { token } = useAuthStore(); // Bearer Token 가져오기
 
   // 상태 정의
   const [profile, setProfile] = useState(profileIcon);
@@ -222,10 +225,45 @@ const GuestInfoForm = () => {
     setFile(file);
   };
 
-  const handleNext = (e) => {
+  const handleNext = async (e) => {
     e.preventDefault();
     if (!isValid) return;
-    setNextStep(3); // SignupSuccess 화면으로 이동
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("introduction", introduce);
+
+    if (profile && profile !== profileIcon) {
+      const profileBlob = dataURLtoFile(profile, "profile.png");
+      formData.append("profileImagUrl", profileBlob);
+    }
+
+    if (idFile) formData.append("idFile", idFile);
+
+    try {
+      await axios.patch("/api/v1/user/my/update-profile", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setNextStep(3); // SignupSuccess 화면으로 이동
+    } catch (err) {
+      console.error(err);
+      alert("프로필 업데이트 중 오류가 발생했습니다.");
+    }
+  };
+
+  // Base64 -> File 변환
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
   };
 
   return (
