@@ -4,6 +4,8 @@ const useSignupStore = create((set) => ({
   step: 1, // 1: 계정 선택, 2: 개인정보 입력, 3: 회원가입 성공
   userType: null, // 'host' 또는 'guest'
   name: "", // 이름 전역 상태 추가
+  profileImage: null, // 프로필 사진 (File 또는 URL)
+  attachments: [], // 첨부 파일들 (File 배열)
 
   // 다음 단계로 이동
   setNextStep: (nextStep, navigate) => {
@@ -20,8 +22,23 @@ const useSignupStore = create((set) => ({
     if (nextStep === 3 && navigate) navigate("/home");
   },
 
-  // 이름 설정
+  // 회원 정보 업데이트
   setName: (name) => set({ name }),
+  setProfileImage: (fileOrUrl) => set({ profileImage: fileOrUrl }),
+  addAttachment: (file) =>
+    set((state) => ({ attachments: [...state.attachments, file] })),
+  removeAttachment: (index) =>
+    set((state) => ({
+      attachments: state.attachments.filter((_, i) => i !== index),
+    })),
+  resetSignup: () =>
+    set({
+      step: 1,
+      userType: null,
+      name: "",
+      profileImage: null,
+      attachments: [],
+    }),
 }));
 
 export default useSignupStore;

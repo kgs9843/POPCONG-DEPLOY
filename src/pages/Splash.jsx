@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import LogoNoBg from "../assets/logoNoBg.svg";
+import SplashLogo from "../assets/splashLogo.svg";
 
 const SplashContainer = styled.div`
   display: flex;
@@ -10,15 +10,14 @@ const SplashContainer = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
+  top: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
   min-width: 300px;
   max-width: 500px;
   height: 100%;
-  background: var(
-    --a,
-    linear-gradient(208deg, #36d1dc 7.17%, #4ba7e1 50.72%, #5b86e5 93.44%)
+  background: var(--default2);
   );
   gap: 22px;
 `;
@@ -39,7 +38,7 @@ const Splash = () => {
   useEffect(() => {
     // 2초 후 자동 이동
     const timer = setTimeout(() => {
-      navigate("/"); // 온보딩 페이지로 이동
+      navigate("/onboarding"); // 온보딩 페이지로 이동
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -47,8 +46,7 @@ const Splash = () => {
 
   return (
     <SplashContainer>
-      <img src={LogoNoBg} alt="로고" />
-      <LogoText>팝콩: 나만의 팝업 공간</LogoText>
+      <img src={SplashLogo} alt="로고" />
     </SplashContainer>
   );
 };

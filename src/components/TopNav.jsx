@@ -6,6 +6,7 @@ import NotificationActiveIcon from "../assets/icons/activeIcons/notificationIcon
 import PlaceIcon from "../assets/icons/placeIcon.svg";
 import DownArrowIcon from "../assets/icons/downArrowIcon.svg";
 import DownArrowBlueIcon from "../assets/icons/downArrowBlueIcon.svg";
+import LogoNoBg from "../assets/logoNoBg.svg";
 import { useGeoLocation } from "../hooks/useGeoLocation";
 import { getDongFromCoords } from "../utils/getDongFromCoords";
 import { getCoordsFromDong } from "../utils/getCoordsFromDong";
@@ -96,9 +97,18 @@ const TopNav = () => {
           }}
         >
           {shouldHideNav ? (
-            <span style={{ fontWeight: 500, fontSize: "18px", color: "white" }}>
-              {navTitle}
-            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <img
+                src={LogoNoBg}
+                alt="Logo"
+                style={{ width: 24, height: 24 }}
+              />
+              <span
+                style={{ fontWeight: 500, fontSize: "18px", color: "white" }}
+              >
+                {navTitle}
+              </span>
+            </div>
           ) : (
             <>
               <img src={PlaceIcon} alt={"PlaceIcon"} />

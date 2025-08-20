@@ -10,6 +10,9 @@ import heartFilled from "../assets/icons/heartFilled.svg";
 import star from "../assets/icons/star.svg";
 import locationIcon from "../assets/icons/locationIcon.svg";
 import locationWhiteIcon from "../assets/icons/locationWhiteIcon.svg";
+import popular from "../assets/popular.jpg";
+import popular2 from "../assets/popular2.jpeg";
+import popular3 from "../assets/popular3.jpeg";
 
 const Container = styled.div`
   width: 100%;
@@ -282,6 +285,13 @@ const Home = () => {
       startDate: "2025-08-20",
       endDate: "2025-09-10",
     },
+    {
+      status: "이용중",
+      popupName: "청주시 감성 스튜디오",
+      address: "팝콩시 팝콩동",
+      startDate: "2025-08-23",
+      endDate: "2025-09-15",
+    },
   ];
 
   // 최근 인기 매물
@@ -289,7 +299,7 @@ const Home = () => {
     {
       spcaeId: 1,
       spcaeName: "진주시 감성 스튜디오",
-      imageUrl: [],
+      imageUrl: [popular],
       address: "00시 00동 00-0번지",
       rating: 4.0,
       rentalFee: 100000,
@@ -298,10 +308,19 @@ const Home = () => {
     {
       spcaeId: 2,
       spcaeName: "울주시 감성 스튜디오",
-      imageUrl: [],
+      imageUrl: [popular2],
       address: "00시 00동 00-0번지",
       rating: 4.5,
       rentalFee: 200000,
+      isWished: true,
+    },
+    {
+      spcaeId: 3,
+      spcaeName: "울산시 감성 스튜디오",
+      imageUrl: [popular3],
+      address: "00시 00동 00-0번지",
+      rating: 4.3,
+      rentalFee: 300000,
       isWished: true,
     },
   ]);
@@ -319,6 +338,20 @@ const Home = () => {
       popupId: 2,
       name: "울산시 팝업",
       address: "울산시 울산동",
+      startDate: "2025-08-20",
+      endDate: "2025-09-10",
+    },
+    {
+      popupId: 3,
+      name: "청주시 팝업",
+      address: "청주시 청주동",
+      startDate: "2025-08-20",
+      endDate: "2025-09-10",
+    },
+    {
+      popupId: 4,
+      name: "강원시 팝업",
+      address: "강원시 강원동",
       startDate: "2025-08-20",
       endDate: "2025-09-10",
     },

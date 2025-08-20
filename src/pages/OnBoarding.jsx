@@ -25,7 +25,7 @@ const OnboardingContainer = styled.div`
 
 const SwiperWrapper = styled.div`
   position: absolute;
-  top: 80px;
+  top: 10vh;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
@@ -44,7 +44,7 @@ const SlideImage = styled.img`
 
 const BottomWrapper = styled.div`
   position: absolute;
-  bottom: 150px;
+  bottom: 20vh;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
