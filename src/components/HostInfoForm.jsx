@@ -253,11 +253,15 @@ const HostInfoForm = () => {
     if (bankFile) formData.append("bankFile", bankFile);
 
     try {
-      await axios.patch("/api/v1/user/my/update-profile", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.patch(
+        "http://44.251.104.213:8080/api/v1/user/my/update-profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setNextStep(3); // SignupSuccess 화면으로 이동
     } catch (err) {
       console.error(err);
