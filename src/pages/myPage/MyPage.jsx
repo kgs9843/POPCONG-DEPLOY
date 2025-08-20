@@ -1,19 +1,11 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UpArrowIcon from "../../assets/icons/upArrowIcon.svg"; // svg 불러오기
 import Star from "../../assets/icons/star.svg";
 import GrayMarker from "../../assets/icons/grayMarker.svg";
-import useSignupStore from "../../stores/useSignupStore";
-const dummyHost = {
-  id: 1,
-  name: "홍길동",
-  profileImage: "https://via.placeholder.com/150",
-  introduction: "안녕하세요! 성실하게 임대 관리해드립니다.",
-  listingCount: 5,
-  host: true,
-};
-
+import { getProfile } from "../../api/mypage-controller/profileGet";
+import useHistoryStore from "../../stores/useHistoryStore";
 // 더미 데이터 (10개)
 const dummyData = [
   {
@@ -102,12 +94,42 @@ const MyPage = () => {
   const [likeOpen, setLikeOpen] = useState(false);
   const [hostOpen, setHostOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [reserveCount, setReserveCount] = useState(2);
-  const [progressCount, setProgressCount] = useState(0);
-  const [doneCount, setDoneCount] = useState(0);
-  const { userType } = useSignupStore();
-  const isHost = userType === "host";
+  const { reservationHistory, ongoingHistory, completedHistory } =
+    useHistoryStore();
+  const [userRole, setUserRole] = useState("");
+  const isHost = userRole === "HOST";
+  const [dummyHost, setDummyHost] = useState({
+    id: 0,
+    name: "",
+    profileImage: "https://via.placeholder.com/150",
+    introduction: "",
+  });
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getProfile();
+
+        console.log("프로필 불러오기 성공:", response.data);
+        setUserRole(response.data.userRole);
+        // 서버 데이터 → dummyHost 구조로 변환
+        const transformed = {
+          id: response.data.userId,
+          name: response.data.name,
+          profileImage:
+            response.data.profileImageUrl || "https://via.placeholder.com/150",
+          introduction: response.data.introduce,
+        };
+
+        setDummyHost(transformed);
+        // 상태 저장 등 원하는 작업
+      } catch (error) {
+        console.error("프로필 불러오기 실패:", error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
   return (
     <MainContainer>
       <Content>
@@ -157,13 +179,13 @@ const MyPage = () => {
         <Section>
           <HistoryBox>
             <HistoryItem>
-              예약 내역 <span>{reserveCount}건</span>
+              예약 내역 <span>{reservationHistory}건</span>
             </HistoryItem>
             <HistoryItem>
-              진행중 내역 <span>{progressCount}건</span>
+              진행중 내역 <span>{ongoingHistory}건</span>
             </HistoryItem>
             <HistoryItem>
-              완료 내역 <span>{doneCount}건</span>
+              완료 내역 <span>{completedHistory}건</span>
             </HistoryItem>
           </HistoryBox>
         </Section>

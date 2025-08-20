@@ -2,44 +2,21 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-// 더미 데이터
-const dummyData = [
-  {
-    id: 1,
-    name: "홍길동",
-    lastMessage: "안녕하세요! 오늘 보시나요?",
-    time: "방금 전",
-    unreadCount: 3,
-    profile: "https://via.placeholder.com/40",
-    buildingImage: "https://via.placeholder.com/50",
-    timestamp: new Date(2024, 7, 15, 10, 20), // 정렬용 timestamp
-  },
-  {
-    id: 2,
-    name: "김철수",
-    lastMessage: "네 내일 괜찮습니다.",
-    time: "1시간 전",
-    unreadCount: 0,
-    profile: "https://via.placeholder.com/40",
-    buildingImage: "https://via.placeholder.com/50",
-    timestamp: new Date(2024, 7, 15, 9, 10),
-  },
-];
-
+import { useChatStore } from "../../stores/chatStore";
 const ChatPage = () => {
   const navigate = useNavigate();
   const [activeSort, setActiveSort] = useState("newest");
+  const { chats, setUnreadCount } = useChatStore();
 
   // 정렬 함수
   const getSortedList = () => {
     switch (activeSort) {
       case "newest": // 최신순
-        return [...dummyData].sort((a, b) => b.timestamp - a.timestamp);
+        return [...chats].sort((a, b) => b.timestamp - a.timestamp);
       case "oldest": // 오래된 순
-        return [...dummyData].sort((a, b) => a.timestamp - b.timestamp);
+        return [...chats].sort((a, b) => a.timestamp - b.timestamp);
       default:
-        return dummyData;
+        return chats;
     }
   };
 
@@ -101,7 +78,10 @@ const ChatPage = () => {
               {sortedList.map((item) => (
                 <ChatItem
                   key={item.id}
-                  onClick={() => navigate(`/chat/room/${item.id}`)}
+                  onClick={() => {
+                    navigate(`/chat/room/${item.id}`);
+                    setUnreadCount(item.id); // ✅ 함수 호출
+                  }}
                 >
                   <ProfileImg src={item.profile} alt="profile" />
                   <ChatInfo>

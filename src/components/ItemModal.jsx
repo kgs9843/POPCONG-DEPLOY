@@ -37,23 +37,23 @@ const ItemModal = ({ isOpen, onClose, item }) => {
 
       if (liked) {
         // 이미 좋아요 상태라면 → 취소 요청
-        setLiked(false);
-        // const res = await unlikeSpace(spaceId);
+        //setLiked(false);
+        const res = await unlikeSpace(spaceId);
 
-        // if (res?.data?.isLiked !== undefined) {
-        //   setLiked(res.data.isLiked);
-        // } else {
-        //   setLiked(false);
-        // }
+        if (res?.data?.isLiked !== undefined) {
+          setLiked(res.data.isLiked);
+        } else {
+          setLiked(false);
+        }
       } else {
-        setLiked(true);
-        // 좋아요 상태가 아니라면 → 생성 요청
-        // const res = await likeSpace(spaceId);
-        // if (res?.data?.isLiked !== undefined) {
-        //   setLiked(res.data.isLiked);
-        // } else {
-        //   setLiked(true);
-        // }
+        //setLiked(true);
+        //좋아요 상태가 아니라면 → 생성 요청
+        const res = await likeSpace(spaceId);
+        if (res?.data?.isLiked !== undefined) {
+          setLiked(res.data.isLiked);
+        } else {
+          setLiked(true);
+        }
       }
     } catch (error) {
       console.error("좋아요 토글 에러:", error);

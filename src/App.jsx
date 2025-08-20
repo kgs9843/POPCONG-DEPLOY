@@ -59,7 +59,7 @@ function App() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/chat/room/:id" element={<ChatRoomPage />} />
         <Route path="/chat/room/buy/:id" element={<ChatRoomBuyPage />} />
-        <Route path="/chat/room/final" element={<ChatRoomFinalPage />} />
+        <Route path="/chat/room/final/:id" element={<ChatRoomFinalPage />} />
         <Route path="/post/detail/:id" element={<PostingDetailPage />} />
         <Route path="/post/create" element={<PostingCreatePage />} />
         <Route path="/mypage" element={<MyPage />} />

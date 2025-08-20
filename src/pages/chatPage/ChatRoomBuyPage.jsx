@@ -240,7 +240,7 @@ const ChatRoomBuyPage = () => {
                 setStep((prev) => prev + 1);
               }
               if (step === 2) {
-                navigate("/chat/room/final");
+                navigate(`/chat/room/final/${id}`);
               }
             }}
           >

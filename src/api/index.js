@@ -21,7 +21,6 @@ api.interceptors.request.use(
   async (config) => {
     try {
       const tokenData = localStorage.getItem("access_token");
-      console.log(tokenData);
       if (tokenData) {
         config.headers["Authorization"] = `Bearer ${tokenData}`;
       }
@@ -83,4 +82,4 @@ export const put = (url, data) => api.put(url, data);
 export const del = (url, data) => api.delete(url, data);
 
 // PATCH 요청
-export const patch = (url, data) => api.patch(url, data);
+export const patch = (url, data, config = {}) => api.patch(url, data, config);

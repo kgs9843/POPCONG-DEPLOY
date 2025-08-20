@@ -4,7 +4,170 @@ import { useState, useEffect, useRef } from "react";
 import LeftArrowIcon from "../../assets/icons/leftArrowIconBlack.svg";
 import GrayIcon from "../../assets/icons/grayMarker.svg";
 import SendIcon from "../../assets/icons/sendIcon.svg";
-
+import useHistoryStore from "../../stores/useHistoryStore";
+const chatRoomsDummy = [
+  {
+    room_id: 10,
+    messages: [
+      {
+        id: 1,
+        text: "안녕하세요! 혹시 지금 거래 가능할까요?",
+        sender: "other",
+        time: "오후 5:35",
+      },
+      { id: 2, text: "네 가능합니다 😀", sender: "me", time: "오후 5:36" },
+      {
+        id: 3,
+        text: "좋아요! 위치는 어디신가요?",
+        sender: "other",
+        time: "오후 5:37",
+      },
+      {
+        id: 4,
+        text: "대구 북구 대학로 71 2층입니다.",
+        sender: "me",
+        time: "오후 5:38",
+      },
+      {
+        id: 5,
+        text: "알겠습니다. 근처 카페에서 만나는 건 어떨까요?",
+        sender: "other",
+        time: "오후 5:39",
+      },
+      {
+        id: 6,
+        text: "네 좋아요. 혹시 몇 시쯤 가능하세요?",
+        sender: "me",
+        time: "오후 5:40",
+      },
+      {
+        id: 7,
+        text: "6시쯤 괜찮으신가요?",
+        sender: "other",
+        time: "오후 5:41",
+      },
+      {
+        id: 8,
+        text: "네 6시 좋습니다!",
+        sender: "me",
+        time: "오후 5:41",
+      },
+      {
+        id: 9,
+        text: "물건 상태는 괜찮은가요?",
+        sender: "other",
+        time: "오후 5:42",
+      },
+      {
+        id: 10,
+        text: "네, 사용감은 거의 없고 깨끗합니다 🙂",
+        sender: "me",
+        time: "오후 5:43",
+      },
+      {
+        id: 11,
+        text: "오 상태가 정말 좋은가 보네요 👍",
+        sender: "other",
+        time: "오후 5:46",
+      },
+      {
+        id: 12,
+        text: "감사합니다 ㅎㅎ 바로 거래 진행하실까요?",
+        sender: "me",
+        time: "오후 5:47",
+      },
+      {
+        id: 13,
+        text: "네 그럼 오늘 6시에 뵙겠습니다.",
+        sender: "other",
+        time: "오후 5:48",
+      },
+    ],
+  },
+  {
+    room_id: 11,
+    messages: [
+      {
+        id: 1,
+        text: "안녕하세요! 거래 가능할까요?",
+        sender: "other",
+        time: "오후 4:30",
+      },
+      {
+        id: 2,
+        text: "네, 가능합니다 😀",
+        sender: "me",
+        time: "오후 4:31",
+      },
+      {
+        id: 3,
+        text: "좋아요! 위치는 어디신가요?",
+        sender: "other",
+        time: "오후 4:32",
+      },
+      {
+        id: 4,
+        text: "대구 북구 대학로 71 2층입니다.",
+        sender: "me",
+        time: "오후 4:33",
+      },
+      {
+        id: 5,
+        text: "근처 카페에서 만나는 건 어떨까요?",
+        sender: "other",
+        time: "오후 4:34",
+      },
+      {
+        id: 6,
+        text: "좋아요, 몇 시쯤 가능하세요?",
+        sender: "me",
+        time: "오후 4:35",
+      },
+      {
+        id: 7,
+        text: "6시쯤 괜찮으신가요?",
+        sender: "other",
+        time: "오후 4:36",
+      },
+      {
+        id: 8,
+        text: "네, 6시 좋습니다!",
+        sender: "me",
+        time: "오후 4:37",
+      },
+      {
+        id: 9,
+        text: "물건 상태는 괜찮은가요?",
+        sender: "other",
+        time: "오후 4:38",
+      },
+      {
+        id: 10,
+        text: "네, 거의 새것과 같아요 🙂",
+        sender: "me",
+        time: "오후 4:39",
+      },
+      {
+        id: 11,
+        text: "오 상태가 좋군요 👍",
+        sender: "other",
+        time: "오후 4:40",
+      },
+      {
+        id: 12,
+        text: "감사합니다 ㅎㅎ 바로 진행할까요?",
+        sender: "other",
+        time: "오후 4:41",
+      },
+      {
+        id: 13,
+        text: "내일 괜찮습니다.",
+        sender: "me",
+        time: "오후 4:42",
+      },
+    ],
+  },
+];
 const dummyPlace = {
   id: 1,
   price: 100000,
@@ -16,110 +179,38 @@ const dummyPlace = {
 };
 
 const ChatRoomPage = () => {
+  const { addReservation } = useHistoryStore();
+  const [chatRooms, setChatRooms] = useState(chatRoomsDummy);
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const { item } = location.state || {}; // state 없으면 {} 처리
   const chatEndRef = useRef(null);
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      text: "안녕하세요! 혹시 지금 거래 가능할까요?",
-      sender: "other",
-      time: "오후 5:35",
-    },
-    { id: 2, text: "네 가능합니다 😀", sender: "me", time: "오후 5:36" },
-    {
-      id: 3,
-      text: "좋아요! 위치는 어디신가요?",
-      sender: "other",
-      time: "오후 5:37",
-    },
-    {
-      id: 4,
-      text: "대구 북구 대학로 71 2층입니다.",
-      sender: "me",
-      time: "오후 5:38",
-    },
-    {
-      id: 5,
-      text: "알겠습니다. 근처 카페에서 만나는 건 어떨까요?",
-      sender: "other",
-      time: "오후 5:39",
-    },
-    {
-      id: 6,
-      text: "네 좋아요. 혹시 몇 시쯤 가능하세요?",
-      sender: "me",
-      time: "오후 5:40",
-    },
-    {
-      id: 7,
-      text: "6시쯤 괜찮으신가요?",
-      sender: "other",
-      time: "오후 5:41",
-    },
-    {
-      id: 8,
-      text: "네 6시 좋습니다!",
-      sender: "me",
-      time: "오후 5:41",
-    },
-    {
-      id: 9,
-      text: "물건 상태는 괜찮은가요?",
-      sender: "other",
-      time: "오후 5:42",
-    },
-    {
-      id: 10,
-      text: "네, 사용감은 거의 없고 깨끗합니다 🙂",
-      sender: "me",
-      time: "오후 5:43",
-    },
-    {
-      id: 11,
-      text: "혹시 실물 사진도 받아볼 수 있을까요?",
-      sender: "other",
-      time: "오후 5:44",
-    },
-    {
-      id: 12,
-      text: "네 잠시만요, 지금 보내드릴게요.",
-      sender: "me",
-      time: "오후 5:44",
-    },
-    {
-      id: 13,
-      text: "[사진]",
-      sender: "me",
-      time: "오후 5:45",
-    },
-    {
-      id: 14,
-      text: "오 상태가 정말 좋네요 👍",
-      sender: "other",
-      time: "오후 5:46",
-    },
-    {
-      id: 15,
-      text: "감사합니다 ㅎㅎ 바로 거래 진행하실까요?",
-      sender: "me",
-      time: "오후 5:47",
-    },
-    {
-      id: 16,
-      text: "네 그럼 오늘 6시에 뵙겠습니다.",
-      sender: "other",
-      time: "오후 5:48",
-    },
-  ]);
+  // room_id 기준으로 메시지 가져오기
+  const roomMessages =
+    chatRooms.find(
+      (room) => room.room_id === Number(id) // id 문자열이면 Number 처리
+    )?.messages || [];
+
+  console.log(roomMessages);
+  const [messages, setMessages] = useState(roomMessages);
   const [input, setInput] = useState("");
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  useEffect(() => {
+    if (id) {
+      const roomId = Number(id);
+      const exists = chatRooms.some((room) => room.room_id === roomId);
+
+      // ✅ 채팅방이 존재하지 않으면 예약 내역 +1
+      if (!exists) {
+        addReservation();
+      }
+    }
+  }, []);
   const now = new Date();
   const hours = now.getHours();
   const minutes = now.getMinutes().toString().padStart(2, "0");

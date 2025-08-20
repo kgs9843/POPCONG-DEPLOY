@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useLocation, useNavigate } from "react-router-dom";
 import LeftArrowIcon from "../../assets/icons/leftArrowIconBlack.svg";
 import EditProfileIcon from "../../assets/icons/editProfileIcon.svg";
+import { patchProfile } from "../../api/mypage-controller/profilePatch";
 const EditProfilePage = () => {
   const { state } = useLocation(); // MyPage에서 넘겨받은 값
   const navigate = useNavigate();
@@ -24,13 +25,37 @@ const EditProfilePage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  // Base64 -> File 변환
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(",");
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Sdfsdf");
+    let resultProfile = profileImage;
+    if (resultProfile != state?.profileImage) {
+      resultProfile = dataURLtoFile(profileImage, "profile.png");
+    }
 
-    // TODO: 서버로 PATCH 요청 or Zustand 업데이트
-    console.log("저장 데이터:", { name, introduction, profileImage });
+    console.log(resultProfile);
+    try {
+      const response = await patchProfile(name, introduction, resultProfile);
+      console.log("프로필 업데이트 성공:", response);
 
-    navigate(-1); // 저장 후 마이페이지로 이동
+      navigate(-1); // 저장 후 이전 페이지로 이동
+    } catch (error) {
+      console.error("프로필 업데이트 실패:", error);
+      alert("프로필 업데이트에 실패했습니다.");
+    }
   };
   return (
     <Container>

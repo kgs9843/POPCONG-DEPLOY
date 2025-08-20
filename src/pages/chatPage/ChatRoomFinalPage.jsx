@@ -1,9 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import LeftArrowIcon from "../../assets/icons/leftArrowIconBlack.svg";
 import BuyCheckIcon from "../../assets/icons/buyCheckIcon.svg";
-
+import useHistoryStore from "../../stores/useHistoryStore";
 const ChatRoomFinalPage = () => {
+  const { reverseAddReservation, moveToOngoing } = useHistoryStore();
+  const { roomId } = useParams();
   const navigate = useNavigate();
 
   return (
@@ -26,7 +28,9 @@ const ChatRoomFinalPage = () => {
       <HomeBox>
         <HomeButton
           onClick={() => {
-            navigate("/home");
+            navigate("/home", { state: { roomId } });
+            reverseAddReservation();
+            moveToOngoing();
           }}
         >
           홈으로 가기

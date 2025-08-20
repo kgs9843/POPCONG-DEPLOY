@@ -2,45 +2,35 @@ import { create } from "zustand";
 
 const useHistoryStore = create((set) => ({
   // 예약 내역
-  reservationHistory: [],
+  reservationHistory: 2,
 
   // 진행중 내역
-  ongoingHistory: [],
+  ongoingHistory: 0,
 
   // 완료 내역
-  completedHistory: [],
+  completedHistory: 0,
 
-  // 추가 (예: 예약 추가)
-  addReservation: (item) =>
+  // 예약 추가 (+1)
+  addReservation: () =>
     set((state) => ({
-      reservationHistory: [...state.reservationHistory, item],
+      reservationHistory: state.reservationHistory + 1,
+    })),
+  reverseAddReservation: () =>
+    set((state) => ({
+      reservationHistory: state.reservationHistory - 1,
     })),
 
-  // 상태 이동 (예약 → 진행중)
-  moveToOngoing: (id) =>
-    set((state) => {
-      const item = state.reservationHistory.find((r) => r.id === id);
-      return {
-        reservationHistory: state.reservationHistory.filter((r) => r.id !== id),
-        ongoingHistory: [
-          ...state.ongoingHistory,
-          { ...item, status: "ongoing" },
-        ],
-      };
-    }),
+  // 예약 → 진행중 (+1)
+  moveToOngoing: () =>
+    set((state) => ({
+      ongoingHistory: state.ongoingHistory + 1,
+    })),
 
-  // 상태 이동 (진행중 → 완료)
-  completeReservation: (id) =>
-    set((state) => {
-      const item = state.ongoingHistory.find((r) => r.id === id);
-      return {
-        ongoingHistory: state.ongoingHistory.filter((r) => r.id !== id),
-        completedHistory: [
-          ...state.completedHistory,
-          { ...item, status: "completed" },
-        ],
-      };
-    }),
+  // 진행중 → 완료 (+1)
+  completeReservation: () =>
+    set((state) => ({
+      completedHistory: state.completedHistory + 1,
+    })),
 }));
 
 export default useHistoryStore;
